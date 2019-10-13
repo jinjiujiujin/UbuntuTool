@@ -6,6 +6,7 @@
 #----------------------------------------------------------------------------------
 from GetHtml import GetHtml_2 as GetHtml
 import re
+import pymongo as pm
 
 
 def GetUserPages(url):
@@ -16,9 +17,26 @@ def GetUserPages(url):
 
 def GetUsers(url, users):
     html = GetHtml(url)
-    urls = re.findall(r'<a class=\"imgBorder\" href="(.*?)" hidefocus=\"true\">', html, re.S)
-    for s in urls:
-        users.append("http://www.moko.cc"+s)
+    users = re.findall(r'divEditOperate_(\d*?)\".*?weight700\">(\w*?)</span></span>.*?href=(.*?) hidefocus.*?alt=(.*?) title=.*?<p class="font12 lesserColor">(.*?)&nbsp;&nbsp;&nbsp;&nbsp;粉丝&nbsp;&gt;<span class="font12 mainColor">(\d*?)</span', html, re.S)
+ 
+    #write to database
+    #Write2database("5", "1", "15", "1", "1", "1", "1")
+    #for s in urls:
+    #    users.append("http://www.moko.cc"+s)
+
+
+def Write2database(id, level, certificated, homePage, portrait, nikename, follow):
+	##########database information
+    user = "Spider"
+    pwd = "zyydbabareallynb"
+    ##########database information
+    client=pm.MongoClient("localhost", 27017)
+    db = client.mokoUsers#dabaseName
+    db.authenticate(user, pwd)
+    post = {"id":id, "level":level, "certificated": certificated, "homePage":homePage, "portrait":portrait, "nikename":nikename,"follow":follow}
+    db.users.insert_one(post)#collection name
+
+
 
 if __name__ == "__main__":
     print("----------------------Spider is running--------------------------------")

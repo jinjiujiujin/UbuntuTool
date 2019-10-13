@@ -18,7 +18,7 @@ def GetUserPages(url):
 def GetUsers(url, users):
     html = GetHtml(url)
     #get id level certificated mainpage portrait nikename address follows
-    users = re.findall(r'divEditOperate_(\d*?)\".*?thirdColor weight700\">(.*?)</span></span>.*?href=(.*?) hidefocus.*?src=\"(.*?)\".*?alt=(.*?) title=.*?<p class="font12 lesserColor">(.*?)&nbsp;&nbsp;&nbsp;&nbsp;粉丝&nbsp;&gt;<span class="font12 mainColor">(\d*?)</span', html, re.S)
+    users = re.findall(r'divEditOperate_(\d*?)\".*?<span class=\"mainColor weight700\">.*?>(.*?)</span></span>(<br/>)?.*?href=(.*?) hidefocus.*?src=\"(.*?)\".*?alt=(.*?) title=.*?<p class="font12 lesserColor">(.*?)&nbsp;&nbsp;&nbsp;&nbsp;粉丝&nbsp;&gt;<span class="font12 mainColor">(\d*?)</span', html, re.S)
     #write to database
     for user in users:
     	Write2database(user[0], user[1], user[2], "http://www.moko.cc" + user[3], user[4], user[5], user[6], user[7])

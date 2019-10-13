@@ -17,15 +17,15 @@ def GetUserPages(url):
 
 def GetUsers(url, users):
     html = GetHtml(url)
-    users = re.findall(r'divEditOperate_(\d*?)\".*?weight700\">(\w*?)</span></span>.*?href=(.*?) hidefocus.*?alt=(.*?) title=.*?<p class="font12 lesserColor">(.*?)&nbsp;&nbsp;&nbsp;&nbsp;粉丝&nbsp;&gt;<span class="font12 mainColor">(\d*?)</span', html, re.S)
- 
+    #get id level certificated mainpage portrait nikename address follows
+    users = re.findall(r'divEditOperate_(\d*?)\".*?thirdColor weight700\">(.*?)</span></span>.*?href=(.*?) hidefocus.*?src=\"(.*?)\".*?alt=(.*?) title=.*?<p class="font12 lesserColor">(.*?)&nbsp;&nbsp;&nbsp;&nbsp;粉丝&nbsp;&gt;<span class="font12 mainColor">(\d*?)</span', html, re.S)
     #write to database
-    #Write2database("5", "1", "15", "1", "1", "1", "1")
-    #for s in urls:
-    #    users.append("http://www.moko.cc"+s)
+    for user in users:
+    	Write2database(user[0], user[1], user[2], "http://www.moko.cc" + user[3], user[4], user[5], user[6], user[7])
 
 
-def Write2database(id, level, certificated, homePage, portrait, nikename, follow):
+
+def Write2database(id, level, certificated, homePage, portrait, nikename, address, follow):
 	##########database information
     user = "Spider"
     pwd = "zyydbabareallynb"
@@ -33,7 +33,7 @@ def Write2database(id, level, certificated, homePage, portrait, nikename, follow
     client=pm.MongoClient("localhost", 27017)
     db = client.mokoUsers#dabaseName
     db.authenticate(user, pwd)
-    post = {"id":id, "level":level, "certificated": certificated, "homePage":homePage, "portrait":portrait, "nikename":nikename,"follow":follow}
+    post = {"id":id, "level":level, "certificated": certificated, "homePage":homePage, "portrait":portrait, "nikename":nikename, "address":address, "follow":follow}
     db.users.insert_one(post)#collection name
 
 
@@ -51,3 +51,4 @@ if __name__ == "__main__":
         GetUsers(page_url, users)
     #save to database
     
+    print("----------------------Spider Finished--------------------------------")
